@@ -1,0 +1,78 @@
+Standard Scene Names (Used these strings in scene change scripts)
+	glycolysis
+	mitochondriaview
+
+Layers for Sprites- use Z position to accomodate text, assign to parent transform only
+	Priority 5: reactions, sockets
+	4 moving carbon chain, Intermediates
+	3 movable molecules
+
+
+List of Resources (Use these strings for instantiation)
+	ATP
+	ADP
+	Dehydrogenase
+	Kinase
+	Aldolase
+	Isomerase
+
+List of Other Prefabs 
+
+List of Scripts
+	CarbonChain- contains a number of carbons and phosphates, change numcarbons and numphosphates at runtime
+	CarbonChainPlus- extended to contain a number of carbons, phosphates, oxygens, hydrogens, and electrons
+	ChainChecker- spawns a number of molecules (assigned in inspector) when an object tagged MovingCarbonChain impacts its collider
+		has a bool which changes to true if it has already spawned its molecules
+
+	MoleculeViewRelay- onmouseover relays the attached molecule to molecule view, causing the view to change
+	MoleculeView- when sent a molecule name from MoleculeViewRelay, moves the child object with the same name to the front of the GUI 
+
+	Draggable- attached to movable molecules to allow them to be dragged
+	PuzzleSocket- contains a socketname and socketedmolecule name
+	GlycolysisController- in glycolysis- controls the production gui, spawns initial molecules, plays sounds, 
+		moves and resets the MovingCarbonChain
+	Target- causes the attached object to rotate around its start position
+	Reaction- has input socket, output socket and enzyme- alters the MovingCarbonChain based on what is in the sockets
+	
+	MoleculeWobble- causes molecules to wobble slightly when they aren't being picked up 
+	ExpandedView- expands and retracts the inspector assigned gameobject on mouse over and exit
+	ExpandIn- causes objects to expand in from nothing when they appear
+	UIShake- when public variable shake made true, shakes the attached UI 
+	UIMoveScale- moves and scales an attached UI, currently unused
+
+	SceneTransitionAndStorage- attached to the SceneTransitionAndStorage object which has DontDestroyOnLoad
+		saves the scene state before the scene changes, loads the scene state after it changes, and carries production information between scenes
+	ChangeSceneOnClick- put on mitochondria view reactionsets, changes the scene to the inspector assigned name
+		also has function to return to the mitochondria view, used by the exit button in each reaction
+
+	MouseWheelCameraZoom
+	ArrowKeyCameraMove
+
+	Tuple
+
+		
+Molecule Descriptions (Used in MoleculeView gui)
+	Powersources
+		Adenosine triphosphate [POWERSOURCE] a molecule that stores energy in 3 phosphate (P) bonds /// can lose one of its 3 phosphates (P) to a carbon chain, converting itself to ADP /// also the product of ADP + a phosphate
+		Adenosine diphosphate [CONVERTED POWERSOURCE] a molecule with 2 phosphate bonds that results when ATP loses a phosphates /// can gain a phosphate from a carbon chain to turn back into ATP
+		NADH [POWERSOURCE] a molecule used to store and carry high-energy electrons /// created from NAD+
+		NAD+ [CONVERTED POWERSOURCE] a molecule that takes in electrons and free floating hydrogens to turn into NADH- /// releases free energy in this process
+	Enzymes
+		Kinase [ENZYME] a crucial enzyme that catalyzes the tranfer of a phosphate between ATP/ADP and a carbon chain 
+		Dehydrogenase [ENZYME] adds a free phosphate to a carbon chain and converts NAD to NADH 
+			CHANGE- adding electrons to NADH in the form of a hydrogen, by binding to NAD 
+			NOTE- dehy does not add phosphate, another enzyme adds phosphate
+		Aldolase [ENZYME] splits a carbon chain in two 
+		Add isomerase
+		Add question marks that explain things mechanics don't 
+		Notes showing actual
+		
+
+
+New Level/Scene Todo
+1. Drag in CarbonChain prefab and tag with MovingCarbonChain
+2. Drag in all Reactions
+3. Drag in all Intermediates, set molecules to spawn when the MovingCarbonChain passes in ChainChecker
+4. Add ArrowKeyCameraMove to Main Camera
+5. Drag in UICanvas 
+6. Drag in PuzzleController, set the MovingCarbonChain as Inputmolecule and the initial molecules to spawn

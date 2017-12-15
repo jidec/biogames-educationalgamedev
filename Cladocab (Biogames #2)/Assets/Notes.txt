@@ -1,0 +1,3 @@
+Road Proportions: 1 on the X axis = 1 million years
+default full torque 110
+default top speed 200

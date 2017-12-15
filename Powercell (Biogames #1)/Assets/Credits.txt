@@ -1,0 +1,12 @@
+Biogames 1: Powercell - Alpha 1.0 - 12/11/2017
+Made (with love) by Jacob Idec
+
+Images
+    Mitochondria Image - Clipart Library- http://clipart-library.com/mitochondria-cliparts.html
+    Lewis Structures- Wikipedia- http://www.wikipedia.org
+    
+External Assets
+    Unity Serializer- Mike Talbot, TheSniperFan - https://gitgud.io/TheSniperFan/unityserializer-ng
+    TextMeshPro - Unity Technologies - https://www.assetstore.unity3d.com/en/#!/content/84126
+    SimpleTransitions- Laireon Games- https://www.assetstore.unity3d.com/en/#!/content/13100
+    GameJamMenuTemplate - Unity Technologies- https://www.assetstore.unity3d.com/en/#!/content/40465

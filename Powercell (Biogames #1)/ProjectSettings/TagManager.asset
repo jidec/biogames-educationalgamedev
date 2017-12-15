@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Socket
+  - MovableMolecule
+  - MovableEnzyme
+  - MovableCarbons
+  - MovablePowersource
+  - Reaction
+  - MovingCarbonChain
+  - UICanvas
+  - PuzzleController
+  - MoleculeView
+  - SceneTransitionAndStorage
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Sockets
+  - Molecules
+  - ExpandedViews
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Sockets
+    uniqueID: 4175201741
+    locked: 0
+  - name: MovingCarbonChain
+    uniqueID: 3869391141
+    locked: 0
+  - name: MovableMolecules
+    uniqueID: 3794453137
+    locked: 0
+  - name: ExpandedViews
+    uniqueID: 1813141995
+    locked: 0
