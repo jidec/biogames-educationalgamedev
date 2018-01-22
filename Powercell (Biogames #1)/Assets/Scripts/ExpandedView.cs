@@ -13,7 +13,8 @@ public class ExpandedView : MonoBehaviour {
 	public bool expandwhileinsocket;
 	// Use this for initialization
 	void Start () {
-		initialscale = objecttoexpand.transform.localScale;
+		if(objecttoexpand != null)
+			initialscale = objecttoexpand.transform.localScale;
 	}
 	
 	// Update is called once per frame

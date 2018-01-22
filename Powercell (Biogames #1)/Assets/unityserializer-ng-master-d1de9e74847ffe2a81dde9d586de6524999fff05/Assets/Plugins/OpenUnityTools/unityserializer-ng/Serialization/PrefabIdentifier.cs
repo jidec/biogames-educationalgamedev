@@ -17,7 +17,8 @@ public class PrefabIdentifier : StoreInformation {
             (t.GetType() == typeof(PrefabIdentifier) && t != this) ||
             t.GetType() == typeof(StoreInformation)
             )) {
-            DestroyImmediate(c);
+            //DestroyImmediate(c);
+            Destroy(c);
         }
     }
 }

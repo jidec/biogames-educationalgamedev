@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 65061619073253260}
   - component: {fileID: 114757217382414920}
   - component: {fileID: 114496092542691496}
+  - component: {fileID: 114232480897819074}
   m_Layer: 0
   m_Name: Dehydrogenase
   m_TagString: MovableEnzyme
@@ -144,6 +145,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.5, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114232480897819074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1757822391714642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: 
+  classId: 2fe18f22-7520-4d20-a392-c8bc445c1b90
+  StoreAllComponents: 1
+  Components: []
 --- !u!114 &114347956389248720
 MonoBehaviour:
   m_ObjectHideFlags: 1

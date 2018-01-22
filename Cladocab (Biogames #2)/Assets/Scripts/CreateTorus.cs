@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿
+/* 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,3 +45,4 @@ public class CreateTorus : ScriptableWizard
         go.transform.parent = parent;
     }
 }
+*/

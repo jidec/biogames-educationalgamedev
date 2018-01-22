@@ -76,3 +76,8 @@ New Level/Scene Todo
 4. Add ArrowKeyCameraMove to Main Camera
 5. Drag in UICanvas 
 6. Drag in PuzzleController, set the MovingCarbonChain as Inputmolecule and the initial molecules to spawn
+
+Serialized Assets
+	Movable Molecules - Prefab Identifiers
+	Game Controller - Store Information 
+	ReactionSet1- ReactionSkeleton1 has store info

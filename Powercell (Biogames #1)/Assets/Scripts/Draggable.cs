@@ -32,7 +32,8 @@
 				//sets socketed molecule of last socket to null when picked up
 
 				if(gameObject.Equals(target))
-				lastsocket.socketedmolecule = null;
+                    if(lastsocket != null)
+				        lastsocket.socketedmolecule = null;
              }
          }
          if (Input.GetMouseButtonUp(0))
@@ -68,6 +69,7 @@
 	void OnTriggerStay(Collider col)
 	{
 		//if you let go of the mouse
+        if(target != null)
 		if(_mouseState == false && target.Equals(gameObject))
 		{
 			//if you are colliding with a Socket and the Socket is not occupied, stick the Molecule to the Socket
@@ -77,14 +79,16 @@
 				col.GetComponent<PuzzleSocket> ().socketedmolecule = gameObject;
 
 				lastsocket = col.GetComponent<PuzzleSocket>();
-                GetComponent<ExpandedView>().startexpand();
+                if(GetComponent<ExpandedView>() != null)
+                    GetComponent<ExpandedView>().startexpand();
 
 				//play the sound
 				GameObject.FindGameObjectWithTag("PuzzleController").GetComponent<GlycolysisController>().playSound("Snap");
 			}
             else
             {
-                GetComponent<ExpandedView>().startretract();
+                if(GetComponent<ExpandedView>() != null)
+                  GetComponent<ExpandedView>().startretract();
             }
 
 		}

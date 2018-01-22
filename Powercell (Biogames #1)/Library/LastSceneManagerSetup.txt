@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Alpha 1.0/startmenu.unity
+- path: Assets/Scenes/Alpha 1.0/mitochondriaview.unity
   isLoaded: 1
   isActive: 1

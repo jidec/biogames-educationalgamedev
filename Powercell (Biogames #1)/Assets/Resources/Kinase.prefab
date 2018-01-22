@@ -20,8 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4779207475601624}
   - component: {fileID: 212234340409802500}
-  - component: {fileID: 114614066555755848}
-  - component: {fileID: 114484382706855936}
   m_Layer: 0
   m_Name: TriangleSprite
   m_TagString: Untagged
@@ -41,7 +39,7 @@ GameObject:
   - component: {fileID: 65626750374846838}
   - component: {fileID: 114411671873983890}
   - component: {fileID: 114474760367544692}
-  - component: {fileID: 114590698898822022}
+  - component: {fileID: 114452933917027126}
   m_Layer: 0
   m_Name: Kinase
   m_TagString: MovableEnzyme
@@ -61,8 +59,6 @@ GameObject:
   - component: {fileID: 23562722486026484}
   - component: {fileID: 222109925056847216}
   - component: {fileID: 114193437245291892}
-  - component: {fileID: 114425520036800506}
-  - component: {fileID: 114548368802054970}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -288,20 +284,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a5a757106739b4dbfb67497cceda28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114425520036800506
+--- !u!114 &114452933917027126
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921512217018244}
+  m_GameObject: {fileID: 1775666826581606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd6fd92df3c974ed690d61989eb183ce, type: 3}
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsDeserializing: 0
   _id: 
-  classId: f190454e-c0fd-43cb-a25e-16fb7301eb03
+  classId: 01fcae93-83f1-468a-b721-32cb8503143a
   StoreAllComponents: 1
   Components: []
 --- !u!114 &114474760367544692
@@ -316,70 +312,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moleculename: Kinase
---- !u!114 &114484382706855936
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1539371263350666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd6fd92df3c974ed690d61989eb183ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: 
-  classId: 42d9f125-2ab0-4162-8a83-5859eb892f6d
-  StoreAllComponents: 1
-  Components: []
---- !u!114 &114548368802054970
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921512217018244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd6fd92df3c974ed690d61989eb183ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: 
-  classId: dfa0fbc3-0b15-41a7-98be-91823107adf7
-  StoreAllComponents: 1
-  Components: []
---- !u!114 &114590698898822022
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1775666826581606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd6fd92df3c974ed690d61989eb183ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: 
-  classId: c16a4777-5ac0-4d56-aba6-53afbd178cf6
-  StoreAllComponents: 1
-  Components: []
---- !u!114 &114614066555755848
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1539371263350666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd6fd92df3c974ed690d61989eb183ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDeserializing: 0
-  _id: 
-  classId: 4e323690-d10e-4939-804a-29d47510ae57
-  StoreAllComponents: 1
-  Components: []
 --- !u!212 &212234340409802500
 SpriteRenderer:
   m_ObjectHideFlags: 1

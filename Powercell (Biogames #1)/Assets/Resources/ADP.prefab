@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 114522189022778228}
   - component: {fileID: 114971696553280980}
   - component: {fileID: 114042446189925492}
+  - component: {fileID: 114790159404292836}
   m_Layer: 0
   m_Name: ADP
   m_TagString: MovablePowersource
@@ -420,6 +421,9 @@ MonoBehaviour:
   initialscale: {x: 0, y: 0, z: 0}
   expand: 0
   retract: 0
+  fullyexpanded: 0
+  delaying: 0
+  expandwhileinsocket: 0
 --- !u!114 &114429860042984044
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -559,6 +563,22 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!114 &114790159404292836
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1778595164413414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: 
+  classId: 40236871-2630-45c3-8865-088c88a5805b
+  StoreAllComponents: 1
+  Components: []
 --- !u!114 &114971696553280980
 MonoBehaviour:
   m_ObjectHideFlags: 1

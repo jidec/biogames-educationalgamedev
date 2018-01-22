@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 65649232532591630}
   - component: {fileID: 114257924651722780}
   - component: {fileID: 114421708662820842}
+  - component: {fileID: 114986026716725704}
   m_Layer: 0
   m_Name: Isomerase
   m_TagString: MovableEnzyme
@@ -310,6 +311,22 @@ MonoBehaviour:
   IsDeserializing: 0
   _id: 59b2ef56-43ed-40e3-9105-0e43b2e25852
   classId: f190454e-c0fd-43cb-a25e-16fb7301eb03
+  StoreAllComponents: 1
+  Components: []
+--- !u!114 &114986026716725704
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913220452463446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: 
+  classId: d2be4b0b-3f21-46ac-a25e-4c4bebfa9064
   StoreAllComponents: 1
   Components: []
 --- !u!212 &212800001062394236

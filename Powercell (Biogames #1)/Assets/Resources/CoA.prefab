@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114779282577564816}
   - component: {fileID: 114695502081207544}
   - component: {fileID: 114196555473631286}
+  - component: {fileID: 114966157544551334}
   m_Layer: 0
   m_Name: CoA
   m_TagString: MovablePowersource
@@ -272,6 +273,9 @@ MonoBehaviour:
   initialscale: {x: 0, y: 0, z: 0}
   expand: 0
   retract: 0
+  fullyexpanded: 0
+  delaying: 0
+  expandwhileinsocket: 0
 --- !u!114 &114269330783362608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -311,6 +315,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a5a757106739b4dbfb67497cceda28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114966157544551334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1092192762974598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: 
+  classId: 7e63ec6a-ec96-4ed4-a7dc-3b3fc3fabcaf
+  StoreAllComponents: 1
+  Components: []
 --- !u!212 &212227023827538770
 SpriteRenderer:
   m_ObjectHideFlags: 1

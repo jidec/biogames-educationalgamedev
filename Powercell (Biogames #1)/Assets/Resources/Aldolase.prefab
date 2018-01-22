@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 65299091128362208}
   - component: {fileID: 114019681320382886}
   - component: {fileID: 114526908242783688}
+  - component: {fileID: 114307798652123074}
   m_Layer: 0
   m_Name: Aldolase
   m_TagString: MovableEnzyme
@@ -155,6 +156,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a5a757106739b4dbfb67497cceda28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114307798652123074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1805007421788596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ac6d84dca7648fab1a3a905dbc55b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDeserializing: 0
+  _id: 
+  classId: 9586ad91-27ae-4b48-910a-4471cbcf39f9
+  StoreAllComponents: 1
+  Components: []
 --- !u!114 &114526908242783688
 MonoBehaviour:
   m_ObjectHideFlags: 1

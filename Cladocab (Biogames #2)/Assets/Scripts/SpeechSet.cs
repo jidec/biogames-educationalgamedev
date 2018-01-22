@@ -29,6 +29,7 @@ public class SpeechSet: MonoBehaviour {
 
 	public void speakFromSet()
 	{
+		if(currentorganism != "")
 		//If quotes remain for current organism
 		if(quotestotrigger[currentorganism].Count > 0)
 		{
@@ -45,6 +46,8 @@ public class SpeechSet: MonoBehaviour {
 
 	public void speakFirstTwoFromSet()
 	{
+		if(quotestotrigger[currentorganism].Count > 1)
+		{
 		string quote1 = quotestotrigger[currentorganism][0];
 		string quote2 = quotestotrigger[currentorganism][1];
 		
@@ -53,7 +56,7 @@ public class SpeechSet: MonoBehaviour {
 
 		//remove spoken quote so it can't be repeated
 		quotestotrigger[currentorganism].RemoveAt(0);
-		quotestotrigger[currentorganism].RemoveAt(1);
-
+		quotestotrigger[currentorganism].RemoveAt(0);
+		}
 	}
 }

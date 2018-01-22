@@ -10,6 +10,9 @@ public class Reaction : MonoBehaviour {
 	public GameObject enzymesocket;
 	
 	public GameObject freephosphate;
+
+	public GameObject movingelectron;
+	public GameObject movingphosphate;
 	public GameObject ccprefab;
 	//public GameObject movingcarbonchain;
 	public bool mccpassed;
@@ -123,9 +126,15 @@ public class Reaction : MonoBehaviour {
 		}
 	}
 
+	//deals with phosphate reappearance in dehydrogenase reactions
 	public IEnumerator phosphateReappear()
 	{
 		yield return new WaitForSeconds(3);
 		freephosphate.SetActive(true);
+	}
+
+	public void animatePhosphateIn()
+	{
+		movingphosphate.GetComponent<Animator>().Play("PhosphateIn");
 	}
 }
