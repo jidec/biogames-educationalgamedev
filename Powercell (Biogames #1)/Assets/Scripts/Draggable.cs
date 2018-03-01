@@ -27,7 +27,6 @@
 			if (target != null && (target.tag == "MovableCarbons" || target.tag == "MovableEnzyme" || target.tag == "MovablePowersource"))
              {
                  _mouseState = true;
-                 screenSpace = Camera.main.WorldToScreenPoint(target.transform.position);
                  offset = target.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenSpace.z));
 				//sets socketed molecule of last socket to null when picked up
 
@@ -39,7 +38,11 @@
          if (Input.GetMouseButtonUp(0))
          {
              _mouseState = false;
+             DeleteOnBinEnter();
+             if(target != null)
+                screenSpace = Camera.main.WorldToScreenPoint(target.transform.position);
          }
+
          if (_mouseState)
          {
              //keep track of the mouse position
@@ -94,4 +97,19 @@
 		}
 			
 	}
+
+    public void DeleteOnBinEnter()
+    {
+        if(target != null)
+        {
+            Vector3 binpos = new Vector3(798.7f, 492.2f, 0.0f);
+            Vector3 objpos = Camera.main.WorldToScreenPoint(target.transform.position);
+            if(objpos.x > binpos.x - 25 && objpos.x < binpos.x + 25 && objpos.y > binpos.y - 25 && objpos.y < binpos.y + 25)
+            {
+                GameObject.FindGameObjectWithTag("Bin").GetComponent<UIShake>().shake = true;
+                Destroy(target);
+                target = null;
+            }
+        }
+    }
  }

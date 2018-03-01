@@ -3,50 +3,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Vehicles.Car;
+using System;
 
 public class GameController : MonoBehaviour {
 
 	public GameObject playercab; 
 	public GameObject currentroad;
 
+	//variables for organisms and changing organisms
 	public string currentorganism;
-
 	public GameObject organismview;
+	public Stack<string> animalorder;
 
+	//text that changes based on time
 	public Text hierarchytext;
 	public Text timetext;
-
 	public Text mypstext;
+	public Text sealeveltext;
+	public Text o2text;
+	public Text co2text;
+	public Text temperaturetext;
 
+	//variables for myps calculation
 	public double myps;
-
 	public double currenttime;
 	public double timetraveled;
-
 	public double prevtimedistance;
 
-	//an array of o2 percentages with the array index corresponding to the geologic time
+	//arrays of paleochronology data
 	public double[] o2attime = new double[1500];
-
-	//an array of co2 percentages with the array index corresponding to the geologic time
-	public double[] co2attime = new double[1500];
-
-	//an array of sea levels with the array index corresponding to the geologic time
+	public double[] co2attime = new double[1000];
 	public double[] sealevelsattime = new double[1500];
+	public double[] temperatureattime = new double[1500];
 
+	//animal view shifting variables
 	public bool viewup;
 	public bool viewdown;
 	public GameObject animalview;
 
+	//boosting variables
 	public GameObject boostview;
-
 	public bool boostenabled;
-	public Stack<string> animalorder;
-
 	public float boostspeed;
+
+	public Shader warpshader;
+	public Camera camera;
+
+	public ParticleSystem co2smoke;
+	public GameObject water;
+	public Skybox tempsky;
+
+	public Color coolest;
+	public Color hottest;
+	public Color unknowntemp;
+
+	public GameObject ice;
+	public GameObject snow;
+	public GameObject meteors;
 
 	// Use this for initialization
 	void Start () {
+		//testing shader
+		//camera.SetReplacementShader(warpshader, "t");
+		//camera.gameObject.SetActive(true);
+		//testing tint
+		//if (RenderSettings.skybox.HasProperty("_Tint"))
+         // RenderSettings.skybox.SetColor("_Tint", Color.red);
+       //else if (RenderSettings.skybox.HasProperty("_SkyTint"))
+         //RenderSettings.skybox.SetColor("_SkyTint", Color.red);
+		setPaleoData();
 		animalorder = new Stack<string>();
 		InvokeRepeating("updateMyps",0,1);
 		animalorder.Push("CommonStarfish");
@@ -60,6 +85,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+
+		//rotate skybox
+		RenderSettings.skybox.SetFloat("_Rotation", Time.time * 1f);
 		
 		//myps calculation stuff
 		double timedistance = 0;
@@ -67,51 +95,36 @@ public class GameController : MonoBehaviour {
 			timedistance = Vector3.Distance(playercab.transform.position, new Vector3(currentroad.GetComponent<RoadGenerator>().xstart, 0, currentroad.GetComponent<RoadGenerator>().zstart));
 		timetraveled += Mathf.Abs((float) timedistance - (float) prevtimedistance);
 		prevtimedistance = timedistance;
-		
-		//avoid errors
+
+		//set time, hierarchy, myps
 		if(currentroad != null)
 		{
 			//set current time and update timetext
 			if((int)(currentroad.GetComponentInChildren<Road>().timeatstart - timedistance) >= 0)
 			{
+				int prevtime = (int) currenttime;
 				currenttime = (int)(currentroad.GetComponentInChildren<Road>().timeatstart - timedistance);
+				if(currenttime != prevtime)
+				{
 				timetext.text = " " + currenttime + " million years ago";
+				//updates Co2, o2, sea level, and temp based on current time
+				updateGeologic();
+				}
 			}
 
 			//set hierarchytext and myps text
 			hierarchytext.text = currentroad.GetComponent<Road>().pathname;
-			mypstext.text = "" + (int)(myps * 60) + " mypm (millions of years per min)";
+			mypstext.text = "" + (int)(myps * 60) + " my/min";
 		}
 
-		if(currenttime < 800)
+		//enable or disable boost
+		//if(currenttime < 800)
 			boostenabled = true;
-		else
-			boostenabled = false;
+		//else
+			//boostenabled = false;
 
-		if(boostenabled)
-			boostview.SetActive(true);
-		else
-			boostview.SetActive(false);
-			
-		//boost with shift
-		if(Input.GetKey(KeyCode.LeftShift))
-		{
-			if(boostenabled)
-			{
-			playercab.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,0, boostspeed), ForceMode.Acceleration);
-			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
-			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 1100f;
-			//playercab.GetComponent<CarController>().m_Topspeed = 700f;
-			}
-		}
-
-		//unboost
-		if(Input.GetKeyUp(KeyCode.LeftShift))
-		{
-			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 110f;
-			//playercab.GetComponent<CarController>().m_Topspeed = 200f;
-		}
+		//SPEED BOOOOST
+		doBoost();
 
 		//move up animalview with space
 		if(Input.GetKeyDown(KeyCode.Space))
@@ -159,5 +172,325 @@ public class GameController : MonoBehaviour {
 	{
 		currentorganism = neworganism;
 		organismview.GetComponentInChildren<AnimalView>().changeOrganism(neworganism);
+	}
+
+	//boost if boostenabled
+	public void doBoost()
+	{
+		if(boostenabled)
+			boostview.SetActive(true);
+		else
+			boostview.SetActive(false);
+	
+		//boost with shift
+		if(Input.GetKey(KeyCode.LeftShift))
+		{
+			if(boostenabled)
+			{
+			playercab.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,0, boostspeed), ForceMode.Acceleration);
+			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
+			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 1100f;
+			//playercab.GetComponent<CarController>().m_Topspeed = 700f;
+			}
+		}
+
+		//unboost
+		if(Input.GetKeyUp(KeyCode.LeftShift))
+		{
+			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 110f;
+			//playercab.GetComponent<CarController>().m_Topspeed = 200f;
+		}
+	}
+
+	public void updateGeologic()
+	{
+		//set o2, co2, temp, sea level by finding closest higher and lower values in the tables and linearly calculating the average
+		//also glaciations/extinctions etc
+
+			//Marinoan snowball earth
+			if((int) currenttime <= 650 && (int) currenttime >= 635)
+			{
+				ice.SetActive(true);
+				snow.SetActive(true);
+				playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY;
+				//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 50;
+				//playercab.GetComponent<CarController>().m_ReverseTorque = 10;
+				//playercab.GetComponent<CarController>().m_MaximumSteerAngle = 5;
+				//playercab.GetComponent<CarController>().m_Topspeed = 75;
+			}
+			else if(ice.activeSelf)
+			{
+				ice.SetActive(false);
+				snow.SetActive(false);
+				playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+				//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 110;
+				//playercab.GetComponent<CarController>().m_ReverseTorque = 20;
+				//playercab.GetComponent<CarController>().m_MaximumSteerAngle = 10;
+				//playercab.GetComponent<CarController>().m_Topspeed = 200;
+			}
+
+			//KT extinction
+			if((int) currenttime <= 66 && (int) currenttime >= 63)
+				meteors.SetActive(true);
+
+
+
+			//CO2
+			//start at the currenttime
+			int time = (int) currenttime;
+			//if time < 570
+			if(time <= 570)
+			{	
+				int lowerindex = -1;
+				int higherindex = -1; 
+				int dist2lower = 0;
+				int dist2higher = 0;
+
+				//find closest lower index
+				while(lowerindex == -1)
+				{
+					//if no value at time 
+					if(co2attime[time - dist2lower] == 0)
+					{
+						//increase dist2lower and try lower time
+						dist2lower++;
+					}
+
+					//if value at time
+					else
+					{
+						lowerindex = time - dist2lower;
+					}
+					//lower = 560
+				}
+
+				Debug.Log(co2attime[lowerindex]);
+
+				//find closest higher index
+				while(higherindex == -1)
+				{
+					//if no value at time 
+					if(co2attime[time + dist2higher] == 0)
+					{
+						//increase dist2higherand try higher time
+						dist2higher++;
+					}
+
+					//if value at time
+					else
+					{
+						higherindex = time + dist2higher;
+					}
+					//higher = 570
+				}
+
+				//avg per mil year = absolute value of 
+				float avgpermil = Mathf.Abs((float) co2attime[lowerindex] - (float) co2attime[higherindex]) / (dist2lower + dist2higher + 1);
+				Debug.Log("apm" + avgpermil);
+				double finalval = co2attime[lowerindex] + (avgpermil * dist2lower);
+				if(dist2higher > dist2lower)
+					finalval = co2attime[higherindex] - (avgpermil * dist2higher);
+				Debug.Log("finalval" + finalval);
+				decimal roundedfinal = Convert.ToDecimal(finalval);
+				roundedfinal = decimal.Round(roundedfinal,1);
+				finalval = Convert.ToDouble(roundedfinal);
+				co2text.text ="Co2: " + finalval;
+				Color timecolor = coolest; 
+				timecolor.r += (float) (finalval + 1.1) * .05f;
+			}
+			//if >570
+			else
+			{
+				co2text.text = "Co2: Unknown";
+			}
+
+			//TEMPERATURE
+			time = (int) currenttime;
+			//if time < 570
+			if(time <= 520)
+			{	
+				int lowerindex = -1;
+				int higherindex = -1; 
+				int dist2lower = 0;
+				int dist2higher = 0;
+
+				//find closest lower index
+				while(lowerindex == -1)
+				{
+					//if no value at time 
+					if(temperatureattime[time - dist2lower] == 0)
+					{
+						//increase dist2lower and try lower time
+						dist2lower++;
+					}
+
+					//if value at time
+					else
+					{
+						lowerindex = time - dist2lower;
+					}
+				}
+
+				//find closest higher index
+				while(higherindex == -1)
+				{
+					//if no value at time 
+					if(temperatureattime[time + dist2higher] == 0)
+					{
+						//increase dist2higherand try higher time
+						dist2higher++;
+					}
+
+					//if value at time
+					else
+					{
+						higherindex = time + dist2higher;
+					}
+				}
+
+				//avg per mil year = absolute value of 
+				float avgpermil = Mathf.Abs((float) temperatureattime[lowerindex] - (float) temperatureattime[higherindex]) / (dist2lower + dist2higher + 1);
+				double finalval = temperatureattime[lowerindex] + (avgpermil * dist2lower);
+				if(dist2higher > dist2lower)
+					finalval = temperatureattime[higherindex] - (avgpermil * dist2higher);
+				Debug.Log("finalval" + finalval);
+				decimal roundedfinal = Convert.ToDecimal(finalval);
+				roundedfinal = decimal.Round(roundedfinal,1);
+				finalval = Convert.ToDouble(roundedfinal);
+				temperaturetext.text ="Temp: " + finalval;
+				//change skybox color
+				Color timecolor = coolest; 
+				timecolor.r += (float) (finalval + 1.1) * .05f;
+				if (RenderSettings.skybox.HasProperty("_Tint"))
+         			RenderSettings.skybox.SetColor("_Tint", timecolor);
+			}
+			//if >570
+			else
+			{
+				temperaturetext.text = "Temp: Unknown";
+				//change skybox color
+				if (RenderSettings.skybox.HasProperty("_Tint"))
+         			RenderSettings.skybox.SetColor("_Tint", unknowntemp);
+			}
+	}
+
+	//sets up paleochronology data
+	public void setPaleoData()
+	{
+		//co2 
+		co2attime[570] = 11.7;
+		co2attime[560] = 16.3;
+		co2attime[550] = 18;
+		co2attime[540] = 17.2;
+		co2attime[530] = 25.5;
+		co2attime[520] = 26.2;
+		co2attime[510] = 22.4;
+		co2attime[500] = 18.9;
+		co2attime[490] = 17.3; 
+		co2attime[480] = 17.3;
+		co2attime[470] = 17.7;
+		co2attime[460] = 15.5;
+		co2attime[450] = 15.9;
+		co2attime[440] = 16.7;
+		co2attime[430] = 17;
+		co2attime[420] = 13.9;
+		co2attime[410] = 11;
+		co2attime[400] = 11.3;
+		co2attime[390] = 13.5;
+		co2attime[380] = 15.3;
+		co2attime[370] = 8;
+		co2attime[360] = 6.1;
+		co2attime[350] = 4.3;
+		co2attime[340] = 2.7;
+		co2attime[330] = 1.7;
+		co2attime[320] = 1.3;
+		co2attime[310] = 1.3;
+		co2attime[300] = 1.2;
+		co2attime[290] = 1.3;
+		co2attime[280] = 1.3;
+		co2attime[270] = 1.4;
+		co2attime[260] = 1.9;
+		co2attime[250] = 6.1;
+		co2attime[240] = 7.1;
+		co2attime[230] = 5.2;
+		co2attime[220] = 5.8;
+		co2attime[210] = 4.9;
+		co2attime[200] = 5.4;
+		co2attime[190] = 4.4;
+		co2attime[180] = 4.8;
+		co2attime[170] = 8.6;
+		co2attime[160] = 9.1;
+		co2attime[150] = 7.6;
+		co2attime[140] = 8.2;
+		co2attime[130] = 6.6;
+		co2attime[120] = 6.1;
+		co2attime[110] = 5.9;
+		co2attime[100] = 5.3;
+		co2attime[90] = 4.3;
+		co2attime[80] = 4.2;
+		co2attime[70] = 3.2;
+		co2attime[60] = 2.8;
+		co2attime[50] = 3.2;
+		co2attime[40] = 2.1;
+		co2attime[30] = 1.4;
+		co2attime[20] = 1.2;
+		co2attime[10] = 1;
+		co2attime[0] = 1;
+		
+		//temperature
+		temperatureattime[520] = 6.5;
+		temperatureattime[510] = 7.5;
+		temperatureattime[500] = 6.8; 
+		temperatureattime[490] = 6.4; 
+		temperatureattime[480] = 5.9;
+		temperatureattime[470] = 5.0; 
+		temperatureattime[460] = 2.9;      
+		temperatureattime[450] = 2.2;
+		temperatureattime[440] = 2.5; 
+		temperatureattime[430] = 2.9; 
+		temperatureattime[420] = 3.0;
+		temperatureattime[410] = 3.7;
+		temperatureattime[400] = 4.3; 
+		temperatureattime[390] = 5.3; 
+		temperatureattime[380] = 6.1; 
+		temperatureattime[370] = 4.6;  
+		temperatureattime[360] = 3.7;
+		temperatureattime[350] = 2.7; 
+		temperatureattime[340] = 1.4;
+		temperatureattime[330] = 0.7;
+		temperatureattime[320] = -0.3; 
+		temperatureattime[310] = -1.1;
+		temperatureattime[300] = -1.1;
+		temperatureattime[290] = -0.9;
+		temperatureattime[280] = -0.9;
+		temperatureattime[270] = 0.8; 
+		temperatureattime[260] = 3.5; 
+		temperatureattime[250] = 5.0;
+		temperatureattime[240] = 5.5;
+		temperatureattime[230] = 4.5;
+		temperatureattime[220] = 3.1; 
+		temperatureattime[210] = 1.9; 
+		temperatureattime[200] = 2.0; 
+		temperatureattime[190] = 1.7; 
+		temperatureattime[180] = 1.0; 
+		temperatureattime[170] = 2.4; 
+		temperatureattime[160] = 2.7;
+		temperatureattime[150] = 2.5; 
+		temperatureattime[140] = 3.0;
+		temperatureattime[130] = 2.3;
+		temperatureattime[120] = 2.6; 
+		temperatureattime[110] = 2.8;
+		temperatureattime[100] = 4.2;
+		temperatureattime[90] = 3.9;
+		temperatureattime[80] = 3.2;
+		temperatureattime[70] = 3.1;
+		temperatureattime[60] = 2.6;  
+		temperatureattime[50] = 2.3;
+		temperatureattime[40] = 1.4;
+		temperatureattime[30] = 0.3;
+		temperatureattime[20] = -0.1;
+		temperatureattime[10] = -0.3;
+		temperatureattime[0] = 0;
 	}
 }

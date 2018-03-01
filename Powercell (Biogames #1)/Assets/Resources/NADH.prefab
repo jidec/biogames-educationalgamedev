@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 114536698359068276}
   - component: {fileID: 114089031780589802}
   - component: {fileID: 114901166221999972}
+  - component: {fileID: 114632250159867712}
   m_Layer: 0
   m_Name: NADH
   m_TagString: MovablePowersource
@@ -281,6 +282,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moleculename: NADH
+--- !u!114 &114632250159867712
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1504966704677398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0af61b69cedf9545a5d178aa051647a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114781288138482846
 MonoBehaviour:
   m_ObjectHideFlags: 1

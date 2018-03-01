@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 114501044763983102}
   - component: {fileID: 114171161426010524}
   - component: {fileID: 114893385328240634}
+  - component: {fileID: 114958914712218504}
   m_Layer: 0
   m_Name: NAD
   m_TagString: MovablePowersource
@@ -420,6 +421,17 @@ MonoBehaviour:
   classId: 6b591ac4-3022-42b6-ac39-03ccbc1008ba
   StoreAllComponents: 1
   Components: []
+--- !u!114 &114958914712218504
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1617648793328812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0af61b69cedf9545a5d178aa051647a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212159556739598368
 SpriteRenderer:
   m_ObjectHideFlags: 1

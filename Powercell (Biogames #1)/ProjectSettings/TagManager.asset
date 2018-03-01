@@ -15,6 +15,7 @@ TagManager:
   - PuzzleController
   - MoleculeView
   - SceneTransitionAndStorage
+  - Bin
   layers:
   - Default
   - TransparentFX
