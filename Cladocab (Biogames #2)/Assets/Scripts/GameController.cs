@@ -54,12 +54,24 @@ public class GameController : MonoBehaviour {
 	public Skybox tempsky;
 
 	public Color coolest;
-	public Color hottest;
 	public Color unknowntemp;
+
+	public float lowestsealevel; 
+	public float sealevelmultiplier;
+
+	public float co2multiplier;
+
+	public GameObject sea;
+
+	public GameObject seashader;
+
+	public Color icecolor; 
 
 	public GameObject ice;
 	public GameObject snow;
 	public GameObject meteors;
+
+	public GameObject firstpersoncam;
 
 	// Use this for initialization
 	void Start () {
@@ -119,7 +131,7 @@ public class GameController : MonoBehaviour {
 
 		//enable or disable boost
 		//if(currenttime < 800)
-			boostenabled = true;
+		boostenabled = true;
 		//else
 			//boostenabled = false;
 
@@ -156,6 +168,15 @@ public class GameController : MonoBehaviour {
 				animalview.transform.position -= new Vector3(0,10,0);
 			}
 		}
+
+		if(Input.GetKeyDown(KeyCode.F))
+		{
+			if(firstpersoncam.activeSelf)
+				firstpersoncam.SetActive(false);
+			else
+				firstpersoncam.SetActive(true);
+		}
+
 	}
 
 
@@ -177,10 +198,10 @@ public class GameController : MonoBehaviour {
 	//boost if boostenabled
 	public void doBoost()
 	{
-		if(boostenabled)
-			boostview.SetActive(true);
-		else
-			boostview.SetActive(false);
+		//if(boostenabled)
+		//	boostview.SetActive(true);
+		//else
+			//boostview.SetActive(false);
 	
 		//boost with shift
 		if(Input.GetKey(KeyCode.LeftShift))
@@ -188,7 +209,8 @@ public class GameController : MonoBehaviour {
 			if(boostenabled)
 			{
 			playercab.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,0, boostspeed), ForceMode.Acceleration);
-			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
+			//playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
+			playercab.transform.rotation = currentroad.transform.rotation;
 			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 1100f;
 			//playercab.GetComponent<CarController>().m_Topspeed = 700f;
 			}
@@ -197,7 +219,7 @@ public class GameController : MonoBehaviour {
 		//unboost
 		if(Input.GetKeyUp(KeyCode.LeftShift))
 		{
-			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+			//playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
 			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 110f;
 			//playercab.GetComponent<CarController>().m_Topspeed = 200f;
 		}
@@ -232,151 +254,300 @@ public class GameController : MonoBehaviour {
 
 			//KT extinction
 			if((int) currenttime <= 66 && (int) currenttime >= 63)
+			{
 				meteors.SetActive(true);
+				playercab.GetComponent<Rigidbody>().mass = 2000;
+
+			}
+			else if(meteors.activeSelf)
+			{
+				meteors.SetActive(false);
+				playercab.GetComponent<Rigidbody>().mass = 1000;
+			}
+
+			//End Permian extinction
+			if((int) currenttime <= 251 && (int) currenttime >= 248)
+			{
+				meteors.SetActive(true);
+				playercab.GetComponent<Rigidbody>().mass = 4000;
+				playercab.GetComponent<Rigidbody>().drag = 1;
 
 
+			}
+			else if(meteors.activeSelf)
+			{
+				meteors.SetActive(false);
+				playercab.GetComponent<Rigidbody>().mass = 4000;
+				playercab.GetComponent<Rigidbody>().drag = 0.1f;
+			}
 
 			//CO2
-			//start at the currenttime
 			int time = (int) currenttime;
-			//if time < 570
-			if(time <= 570)
-			{	
-				int lowerindex = -1;
-				int higherindex = -1; 
-				int dist2lower = 0;
-				int dist2higher = 0;
-
-				//find closest lower index
-				while(lowerindex == -1)
-				{
-					//if no value at time 
-					if(co2attime[time - dist2lower] == 0)
-					{
-						//increase dist2lower and try lower time
-						dist2lower++;
-					}
-
-					//if value at time
-					else
-					{
-						lowerindex = time - dist2lower;
-					}
-					//lower = 560
-				}
-
-				Debug.Log(co2attime[lowerindex]);
-
-				//find closest higher index
-				while(higherindex == -1)
-				{
-					//if no value at time 
-					if(co2attime[time + dist2higher] == 0)
-					{
-						//increase dist2higherand try higher time
-						dist2higher++;
-					}
-
-					//if value at time
-					else
-					{
-						higherindex = time + dist2higher;
-					}
-					//higher = 570
-				}
-
-				//avg per mil year = absolute value of 
-				float avgpermil = Mathf.Abs((float) co2attime[lowerindex] - (float) co2attime[higherindex]) / (dist2lower + dist2higher + 1);
-				Debug.Log("apm" + avgpermil);
-				double finalval = co2attime[lowerindex] + (avgpermil * dist2lower);
-				if(dist2higher > dist2lower)
-					finalval = co2attime[higherindex] - (avgpermil * dist2higher);
-				Debug.Log("finalval" + finalval);
-				decimal roundedfinal = Convert.ToDecimal(finalval);
-				roundedfinal = decimal.Round(roundedfinal,1);
-				finalval = Convert.ToDouble(roundedfinal);
-				co2text.text ="Co2: " + finalval;
-				Color timecolor = coolest; 
-				timecolor.r += (float) (finalval + 1.1) * .05f;
+			//if time unknown
+			if(time > 570)
+			{
+				co2text.text = "ppm Co2: ???";
+				//co2smoke...
 			}
-			//if >570
+			//otherwise time is known
 			else
 			{
-				co2text.text = "Co2: Unknown";
+				double finalval = 0;
+				//if exact time in table
+				if(co2attime[time] != 0)
+				{
+					finalval = co2attime[time];
+				}
+
+				//otherwise approximate
+				else
+				{
+					if(time <= 570)
+					{	
+
+						int lowerindex = -1;
+						int higherindex = -1; 
+						int dist2lower = 0;
+						int dist2higher = 0;
+
+						//find closest lower index
+						while(lowerindex == -1)
+						{
+							//if no value at time 
+							if(co2attime[time - dist2lower] == 0)
+							{
+								//increase dist2lower and try lower time
+								dist2lower++;
+							}
+
+							//if value at time
+							else
+							{
+								lowerindex = time - dist2lower;
+							}
+						}
+
+						//find closest higher index
+						while(higherindex == -1)
+						{
+							//if no value at time 
+							if(co2attime[time + dist2higher] == 0)
+							{
+								//increase dist2higherand try higher time
+								dist2higher++;
+							}
+
+							//if value at time
+							else
+							{
+								higherindex = time + dist2higher;
+							}
+						}
+
+						float avgpermil = Mathf.Abs((float) co2attime[lowerindex] - (float) co2attime[higherindex]) / (dist2lower + dist2higher);
+						if(co2attime[lowerindex] > co2attime[higherindex])
+						{
+							finalval = co2attime[higherindex] + (avgpermil * dist2higher);
+						}
+						else
+						{
+							finalval = co2attime[lowerindex] + (avgpermil * dist2lower);
+						}
+						decimal roundedfinal = Convert.ToDecimal(finalval);
+						roundedfinal = decimal.Round(roundedfinal,1);
+						finalval = Convert.ToDouble(roundedfinal);
+					} 
+				}
+				co2text.text ="ppm Co2: " + finalval;
+				//change co2 smoke
+				co2smoke.startSize = (float) (finalval * co2multiplier);
 			}
 
 			//TEMPERATURE
 			time = (int) currenttime;
-			//if time < 570
-			if(time <= 520)
-			{	
-				int lowerindex = -1;
-				int higherindex = -1; 
-				int dist2lower = 0;
-				int dist2higher = 0;
-
-				//find closest lower index
-				while(lowerindex == -1)
+			//if time unknown
+			if(time > 570)
+			{
+				temperaturetext.text = "ΔT°C: ???";
+				//change skybox color
+				if (RenderSettings.skybox.HasProperty("_Tint"))
+         			RenderSettings.skybox.SetColor("_Tint", unknowntemp);
+			}
+			//otherwise time is known
+			else
+			{
+				double finalval = 0;
+				//if exact time in table
+				if(temperatureattime[time] != 0)
 				{
-					//if no value at time 
-					if(temperatureattime[time - dist2lower] == 0)
-					{
-						//increase dist2lower and try lower time
-						dist2lower++;
-					}
-
-					//if value at time
-					else
-					{
-						lowerindex = time - dist2lower;
-					}
+					finalval = temperatureattime[time];
 				}
 
-				//find closest higher index
-				while(higherindex == -1)
+				//otherwise approximate
+				else
 				{
-					//if no value at time 
-					if(temperatureattime[time + dist2higher] == 0)
-					{
-						//increase dist2higherand try higher time
-						dist2higher++;
-					}
+					if(time <= 520)
+					{	
 
-					//if value at time
-					else
-					{
-						higherindex = time + dist2higher;
-					}
+						int lowerindex = -1;
+						int higherindex = -1; 
+						int dist2lower = 0;
+						int dist2higher = 0;
+
+		
+						//find closest lower index
+						while(lowerindex == -1)
+						{
+							//if no value at time 
+							if(temperatureattime[time - dist2lower] == 0)
+							{
+								//increase dist2lower and try lower time
+								dist2lower++;
+							}
+
+							//if value at time
+							else
+							{
+								lowerindex = time - dist2lower;
+							}
+						}
+
+						//find closest higher index
+						while(higherindex == -1)
+						{
+							//if no value at time 
+							if(temperatureattime[time + dist2higher] == 0)
+							{
+								//increase dist2higherand try higher time
+								dist2higher++;
+							}
+
+							//if value at time
+							else
+							{
+								higherindex = time + dist2higher;
+							}
+						}
+
+						float avgpermil = Mathf.Abs((float) temperatureattime[lowerindex] - (float) temperatureattime[higherindex]) / (dist2lower + dist2higher);
+						if(temperatureattime[lowerindex] > temperatureattime[higherindex])
+						{
+							finalval = temperatureattime[higherindex] + (avgpermil * dist2higher);
+						}
+						else
+						{
+							finalval = temperatureattime[lowerindex] + (avgpermil * dist2lower);
+						}
+						decimal roundedfinal = Convert.ToDecimal(finalval);
+						roundedfinal = decimal.Round(roundedfinal,1);
+						finalval = Convert.ToDouble(roundedfinal);
+					} 
 				}
-
-				//avg per mil year = absolute value of 
-				float avgpermil = Mathf.Abs((float) temperatureattime[lowerindex] - (float) temperatureattime[higherindex]) / (dist2lower + dist2higher + 1);
-				double finalval = temperatureattime[lowerindex] + (avgpermil * dist2lower);
-				if(dist2higher > dist2lower)
-					finalval = temperatureattime[higherindex] - (avgpermil * dist2higher);
-				Debug.Log("finalval" + finalval);
-				decimal roundedfinal = Convert.ToDecimal(finalval);
-				roundedfinal = decimal.Round(roundedfinal,1);
-				finalval = Convert.ToDouble(roundedfinal);
-				temperaturetext.text ="Temp: " + finalval;
+				temperaturetext.text ="ΔT°C: " + finalval;
 				//change skybox color
 				Color timecolor = coolest; 
 				timecolor.r += (float) (finalval + 1.1) * .05f;
 				if (RenderSettings.skybox.HasProperty("_Tint"))
          			RenderSettings.skybox.SetColor("_Tint", timecolor);
 			}
-			//if >570
+
+			//SEA LEVEL
+			time = (int) currenttime;
+			//if time unknown
+			if(time > 540)
+			{
+				sealeveltext.text = "Global sea level (m): ???";
+				//sealevel
+			}
+			//otherwise time is known
 			else
 			{
-				temperaturetext.text = "Temp: Unknown";
-				//change skybox color
-				if (RenderSettings.skybox.HasProperty("_Tint"))
-         			RenderSettings.skybox.SetColor("_Tint", unknowntemp);
+				double finalval = 0;
+				//if exact time in table
+				if(sealevelsattime[time] != 0)
+				{
+					finalval = sealevelsattime[time];
+				}
+
+				//otherwise approximate
+				else
+				{
+					if(time <= 540)
+					{	
+
+						int lowerindex = -1;
+						int higherindex = -1; 
+						int dist2lower = 0;
+						int dist2higher = 0;
+
+						//539
+						//530 = 180
+						//find closest lower index
+						while(lowerindex == -1)
+						{
+							//if no value at time 
+							if(sealevelsattime[time - dist2lower] == 0)
+							{
+								//increase dist2lower and try lower time
+								dist2lower++;
+							}
+
+							//if value at time
+							else
+							{
+								lowerindex = time - dist2lower;
+							}
+						}
+
+						//find closest higher index
+						while(higherindex == -1)
+						{
+							//if no value at time 
+							if(sealevelsattime[time + dist2higher] == 0)
+							{
+								//increase dist2higherand try higher time
+								dist2higher++;
+							}
+
+							//if value at time
+							else
+							{
+								higherindex = time + dist2higher;
+							}
+						}
+
+						//avg per mil year = absolute value of sea level at lower minus sea level of higher 
+						//54
+						//
+						//
+						//530 - 180 
+						//currently 535- target is 135
+						//90 - 180 = 90 / 10 = 9;
+						//finalval = 90 + (9 * 5)
+						float avgpermil = Mathf.Abs((float) sealevelsattime[lowerindex] - (float) sealevelsattime[higherindex]) / (dist2lower + dist2higher);
+						if(sealevelsattime[lowerindex] > sealevelsattime[higherindex])
+						{
+							finalval = sealevelsattime[higherindex] + (avgpermil * dist2higher);
+						}
+						else
+						{
+							finalval = sealevelsattime[lowerindex] + (avgpermil * dist2lower);
+						}
+						decimal roundedfinal = Convert.ToDecimal(finalval);
+						roundedfinal = decimal.Round(roundedfinal,1);
+						finalval = Convert.ToDouble(roundedfinal);
+					} 
+				}
+				sealeveltext.text ="Global sea level (m): " + finalval;
+				//change sea level
+				float sealevel = lowestsealevel; 
+				sealevel += (float) (finalval) * sealevelmultiplier; //.02 = 2y for every 100 meters- max is 400 = 8y
+				sea.transform.position = new Vector3(sea.transform.position.x, sealevel, sea.transform.position.z);
 			}
 	}
 
-	//sets up paleochronology data
-	public void setPaleoData()
+	//sets up paleochronology data tables
+	void setPaleoData()
 	{
 		//co2 
 		co2attime[570] = 11.7;
@@ -491,6 +662,25 @@ public class GameController : MonoBehaviour {
 		temperatureattime[30] = 0.3;
 		temperatureattime[20] = -0.1;
 		temperatureattime[10] = -0.3;
-		temperatureattime[0] = 0;
+		temperatureattime[0] = 1;
+
+		//sea level
+		sealevelsattime[540] = 90;
+		sealevelsattime[530] = 180;
+		sealevelsattime[500] = 325;
+		sealevelsattime[486] = 275;
+		sealevelsattime[450] = 400; 
+		sealevelsattime[420] = 340;
+		sealevelsattime[405] = 210;
+		sealevelsattime[385] = 260;
+		sealevelsattime[375] = 200;
+		sealevelsattime[325] = 250; 
+		sealevelsattime[250] = -25; 
+		sealevelsattime[222] = 60; 
+		sealevelsattime[200] = 25;
+		sealevelsattime[80] = 240; 
+		sealevelsattime[25] = 1;
+		sealevelsattime[12] = 40;
+		sealevelsattime[0] = 1; 
 	}
 }

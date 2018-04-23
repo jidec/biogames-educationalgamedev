@@ -11,6 +11,8 @@ public class ExpandedView : MonoBehaviour {
 	public bool fullyexpanded;
 	public bool delaying;
 	public bool expandwhileinsocket;
+
+	public bool prevmousestate;
 	// Use this for initialization
 	void Start () {
 		if(objecttoexpand != null)
@@ -19,6 +21,7 @@ public class ExpandedView : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
 		if(expand)
 		{
 			if(objecttoexpand.transform.localScale.x < initialscale.x)
@@ -49,13 +52,24 @@ public class ExpandedView : MonoBehaviour {
 			retract =  true;
 			//expandinglewis.transform.localScale = new Vector3(0,0,0);
 		}
+
+		//if draggable.target = this...
+		if(prevmousestate == false && GetComponent<Draggable>()._mouseState == true)
+			startexpand();
+		if(prevmousestate == true && GetComponent<Draggable>()._mouseState == false)
+			startretract();
+
+		prevmousestate = GetComponent<Draggable>()._mouseState;
 	}
 
+	
+	/* 
 	void OnMouseEnter()
 	{
 		if(!expandwhileinsocket)
 			startexpand();
 	}
+	*/
 
 	public void startexpand()
 	{
@@ -67,19 +81,26 @@ public class ExpandedView : MonoBehaviour {
 
 	public void startretract()
 	{
-		if(!delaying)
-			StartCoroutine(delayRetract());	
+		retract = true;
+		//if(!delaying)
+			//StartCoroutine(delayRetract());	
+		//retract = true;
 	}
+
+	
+	/* 
 	void OnMouseExit()
 	{
 		if(!expandwhileinsocket)
 			startretract();
 	}
+	*/
+	
 
 	private IEnumerator delayRetract()
 	{
 		delaying = true;
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(.1f);
 		retract = true;
 	}
 }
