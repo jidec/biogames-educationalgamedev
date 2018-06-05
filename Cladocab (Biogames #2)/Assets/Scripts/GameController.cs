@@ -36,6 +36,11 @@ public class GameController : MonoBehaviour {
 	public double[] sealevelsattime = new double[1500];
 	public double[] temperatureattime = new double[1500];
 
+	//era and eon
+
+	public Text eratext;
+	public Text periodtext;
+
 	//animal view shifting variables
 	public bool viewup;
 	public bool viewdown;
@@ -44,6 +49,7 @@ public class GameController : MonoBehaviour {
 	//boosting variables
 	public GameObject boostview;
 	public bool boostenabled;
+	public bool boost;
 	public float boostspeed;
 
 	public Shader warpshader;
@@ -73,6 +79,8 @@ public class GameController : MonoBehaviour {
 
 	public GameObject firstpersoncam;
 
+	public Vector3 animalviewposition;
+
 	// Use this for initialization
 	void Start () {
 		//testing shader
@@ -89,6 +97,7 @@ public class GameController : MonoBehaviour {
 		animalorder.Push("CommonStarfish");
 		animalorder.Push("LionsManeJellyfish");
 		animalorder.Push("GiantBarrelSponge");
+		animalviewposition = animalview.transform.position;
 	}
 	void updateMyps()
 	{
@@ -128,15 +137,32 @@ public class GameController : MonoBehaviour {
 			hierarchytext.text = currentroad.GetComponent<Road>().pathname;
 			mypstext.text = "" + (int)(myps * 60) + " my/min";
 		}
+		
+		//playercab.transform.rotation = currentroad.transform.rotation;
+		//trigger to enable boost
+		//boostenabled = true;
 
-		//enable or disable boost
-		//if(currenttime < 800)
-		boostenabled = true;
-		//else
-			//boostenabled = false;
+		if(Input.GetKey(KeyCode.LeftShift) && boostenabled)
+		{
+			boost = true;
+			boostenabled = false;
+			playercab.transform.position += new Vector3(0,1,0);
+			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
+		}
 
-		//SPEED BOOOOST
-		doBoost();
+
+		if(boost)
+		{
+			playercab.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,0, boostspeed), ForceMode.Acceleration);
+			playercab.transform.rotation = Quaternion.Inverse(currentroad.transform.rotation);
+			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 1100f;
+			//playercab.GetComponent<CarController>().m_Topspeed = 700f;
+		}
+		
+		else
+		{
+			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+		}
 
 		//move up animalview with space
 		if(Input.GetKeyDown(KeyCode.Space))
@@ -163,7 +189,7 @@ public class GameController : MonoBehaviour {
 
 		if(viewdown)
 		{
-			if(animalview.transform.position.y > -435)
+			if(animalview.transform.position.y > animalviewposition.y + 10)
 			{
 				animalview.transform.position -= new Vector3(0,10,0);
 			}
@@ -176,7 +202,6 @@ public class GameController : MonoBehaviour {
 			else
 				firstpersoncam.SetActive(true);
 		}
-
 	}
 
 
@@ -195,43 +220,13 @@ public class GameController : MonoBehaviour {
 		organismview.GetComponentInChildren<AnimalView>().changeOrganism(neworganism);
 	}
 
-	//boost if boostenabled
-	public void doBoost()
-	{
-		//if(boostenabled)
-		//	boostview.SetActive(true);
-		//else
-			//boostview.SetActive(false);
-	
-		//boost with shift
-		if(Input.GetKey(KeyCode.LeftShift))
-		{
-			if(boostenabled)
-			{
-			playercab.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0,0, boostspeed), ForceMode.Acceleration);
-			//playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
-			playercab.transform.rotation = currentroad.transform.rotation;
-			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 1100f;
-			//playercab.GetComponent<CarController>().m_Topspeed = 700f;
-			}
-		}
-
-		//unboost
-		if(Input.GetKeyUp(KeyCode.LeftShift))
-		{
-			//playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-			//playercab.GetComponent<CarController>().m_FullTorqueOverAllWheels = 110f;
-			//playercab.GetComponent<CarController>().m_Topspeed = 200f;
-		}
-	}
-
 	public void updateGeologic()
 	{
 		//set o2, co2, temp, sea level by finding closest higher and lower values in the tables and linearly calculating the average
 		//also glaciations/extinctions etc
 
 			//Marinoan snowball earth
-			if((int) currenttime <= 650 && (int) currenttime >= 635)
+			if((int) currenttime <= 650 && (int) currenttime >= 635 && !boost)
 			{
 				ice.SetActive(true);
 				snow.SetActive(true);
@@ -253,10 +248,10 @@ public class GameController : MonoBehaviour {
 			}
 
 			//KT extinction
-			if((int) currenttime <= 66 && (int) currenttime >= 63)
+			if((int) currenttime <= 66 && (int) currenttime >= 63 && !boost)
 			{
 				meteors.SetActive(true);
-				playercab.GetComponent<Rigidbody>().mass = 2000;
+				playercab.GetComponent<Rigidbody>().mass = 4000;
 
 			}
 			else if(meteors.activeSelf)
@@ -266,7 +261,7 @@ public class GameController : MonoBehaviour {
 			}
 
 			//End Permian extinction
-			if((int) currenttime <= 251 && (int) currenttime >= 248)
+			if((int) currenttime <= 251 && (int) currenttime >= 248 && !boost)
 			{
 				meteors.SetActive(true);
 				playercab.GetComponent<Rigidbody>().mass = 4000;
@@ -277,7 +272,7 @@ public class GameController : MonoBehaviour {
 			else if(meteors.activeSelf)
 			{
 				meteors.SetActive(false);
-				playercab.GetComponent<Rigidbody>().mass = 4000;
+				playercab.GetComponent<Rigidbody>().mass = 1000;
 				playercab.GetComponent<Rigidbody>().drag = 0.1f;
 			}
 
@@ -543,6 +538,24 @@ public class GameController : MonoBehaviour {
 				float sealevel = lowestsealevel; 
 				sealevel += (float) (finalval) * sealevelmultiplier; //.02 = 2y for every 100 meters- max is 400 = 8y
 				sea.transform.position = new Vector3(sea.transform.position.x, sealevel, sea.transform.position.z);
+			}
+
+			//update geologic era
+			if(time < 1000)
+			{
+				eratext.text = "Neoproterozoic Era";
+				if(time < 541)
+				{
+					eratext.text = "Paleozoic Era";
+					if(time < 252)
+					{
+						eratext.text = "Mesozoic Era";
+						if(time < 66)
+						{
+							eratext.text = "Cenozoic Era";
+						}
+					}
+				}
 			}
 	}
 

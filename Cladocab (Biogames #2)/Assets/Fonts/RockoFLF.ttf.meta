@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 62d08bfd429505542816909c1d6e93fc
+timeCreated: 1528046962
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: RockoFLF
+  fontNames:
+  - RockoFLF
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
