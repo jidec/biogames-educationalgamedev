@@ -5,7 +5,7 @@ using UnityEngine;
 public class RoadCollide : MonoBehaviour {
 
 public GameObject parentroad;
-	void OnTriggerEnter(Collider col)
+	void OnCollisionEnter(Collision col)
 	{
 		if(col.gameObject.tag == "Player")
 		{

@@ -2,24 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//put on the Road prefab, extends road from xstart,zstart to xend,zend
-//[ExecuteInEditMode]
+//extends road from xstart,zstart to xend,zend
+//also adds islands along the road at times specified in the inspector table
 public class RoadGenerator : MonoBehaviour {
 
-public int xstart;
-private int prevxstart;
-public int zstart; 
-private int prevzstart;
-public int xend;
-private int prevxend;
-public int zend;
-private int prevzend;
+public float xstart;
+public float zstart; 
+public float xend;
+public float zend;
 
 public GameObject road;
 public GameObject divider;
 public GameObject fencepost;
+public GameObject fenceleft;
+public GameObject fenceright;
 
-public GameObject fence;
+//vars for adding islands 
+public int starttime;
+
+public GameObject crowngroupisland;
+public int[] crowngrouptime;
+public GameObject geologicislandprefab;
+public int[] geologicislandtimes;
+public GameObject lifeislandprefab;
+public int[] lifeislandtimes;
+
+
 
 //0, 100, 10 10
 	// Use this for initialization
@@ -29,6 +37,7 @@ public GameObject fence;
 	
 	public void generate()
 	{
+		starttime = GetComponent<Road>().timeatstart;
 		float distance = Mathf.Sqrt((xstart-xend)*(xstart-xend)+(zstart-zend)*(zstart-zend));
 		
 		//place in between points
@@ -43,7 +52,8 @@ public GameObject fence;
 		road.transform.localScale = new Vector3(road.transform.localScale.x, road.transform.localScale.y, distance / 2);
 
 		//subtract 1 from the fence z
-		//fence.transform.localScale += new Vector3(0,0,1);
+		//fenceleft.transform.localScale -= new Vector3(0,0,.01f);
+		//fenceright.transform.localScale -= new Vector3(0,0,.01f);
 
 
 		//add dividers
@@ -89,10 +99,24 @@ public GameObject fence;
 			i+=2;
 		}
 
-		prevxend = xend;
-		prevxstart = xstart;
-		prevzend = zend;
-		prevxend = xend;
+		//add islands
+		for(int k = 0; k < geologicislandtimes.Length; k++)
+		{
+			int timedifference = starttime - geologicislandtimes[k];
+			GameObject newisland = Instantiate(geologicislandprefab, new Vector3(xstart,0,zstart),Quaternion.identity);
+			//rotate towards the end of the road
+			 Vector3 relativePos = new Vector3(xend, 0, zend) - newisland.transform.position;
+			 Quaternion rotation = Quaternion.LookRotation(relativePos);
+			 newisland.transform.rotation = rotation;
+			
+			//new position is the road start moved towards the end i units
+			Vector3 newposition = Vector3.MoveTowards(newisland.transform.position, new Vector3(xend, 0, zend),timedifference);
+			newisland.transform.position = newposition;
+			//set the Road as parent
+			newisland.transform.parent = transform;
+			newisland.transform.rotation = this.transform.rotation;
+			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+		}
 	}
 
 	// Update is called once per frame

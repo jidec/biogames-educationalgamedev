@@ -55,7 +55,7 @@ public class GameController : MonoBehaviour {
 	public Shader warpshader;
 	public Camera camera;
 
-	public ParticleSystem co2smoke;
+	public GameObject co2smoke;
 	public GameObject water;
 	public Skybox tempsky;
 
@@ -147,7 +147,8 @@ public class GameController : MonoBehaviour {
 			boost = true;
 			boostenabled = false;
 			playercab.transform.position += new Vector3(0,1,0);
-			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationY;
+			playercab.transform.rotation = Quaternion.Inverse(currentroad.transform.rotation);
+			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
 		}
 
 
@@ -247,6 +248,7 @@ public class GameController : MonoBehaviour {
 				//playercab.GetComponent<CarController>().m_Topspeed = 200;
 			}
 
+			/* 
 			//KT extinction
 			if((int) currenttime <= 66 && (int) currenttime >= 63 && !boost)
 			{
@@ -259,19 +261,21 @@ public class GameController : MonoBehaviour {
 				meteors.SetActive(false);
 				playercab.GetComponent<Rigidbody>().mass = 1000;
 			}
+			*/ 
 
 			//End Permian extinction
 			if((int) currenttime <= 251 && (int) currenttime >= 248 && !boost)
 			{
-				meteors.SetActive(true);
+				//meteors.SetActive(true);
 				playercab.GetComponent<Rigidbody>().mass = 4000;
 				playercab.GetComponent<Rigidbody>().drag = 1;
+				co2smoke.SetActive(true);
 
 
 			}
-			else if(meteors.activeSelf)
+			else if(co2smoke.activeSelf)
 			{
-				meteors.SetActive(false);
+				co2smoke.SetActive(false);
 				playercab.GetComponent<Rigidbody>().mass = 1000;
 				playercab.GetComponent<Rigidbody>().drag = 0.1f;
 			}
@@ -355,7 +359,7 @@ public class GameController : MonoBehaviour {
 				}
 				co2text.text ="ppm Co2: " + finalval;
 				//change co2 smoke
-				co2smoke.startSize = (float) (finalval * co2multiplier);
+				co2smoke.GetComponent<ParticleSystem>().startSize = (float) (finalval * co2multiplier);
 			}
 
 			//TEMPERATURE
@@ -540,6 +544,7 @@ public class GameController : MonoBehaviour {
 				sea.transform.position = new Vector3(sea.transform.position.x, sealevel, sea.transform.position.z);
 			}
 
+			/* 
 			//update geologic era
 			if(time < 1000)
 			{
@@ -557,6 +562,7 @@ public class GameController : MonoBehaviour {
 					}
 				}
 			}
+			*/
 	}
 
 	//sets up paleochronology data tables
