@@ -41,6 +41,10 @@ public class GameController : MonoBehaviour {
 	public Text eratext;
 	public Text periodtext;
 
+	public Text Pdescription;
+
+	public Text Edescription;
+
 	//animal view shifting variables
 	public bool viewup;
 	public bool viewdown;
@@ -52,34 +56,33 @@ public class GameController : MonoBehaviour {
 	public bool boost;
 	public float boostspeed;
 
+	//warp test variables
 	public Shader warpshader;
 	public Camera camera;
 
+	//geologic weather variables
 	public GameObject co2smoke;
 	public GameObject water;
 	public Skybox tempsky;
-
 	public Color coolest;
 	public Color unknowntemp;
-
 	public float lowestsealevel; 
 	public float sealevelmultiplier;
-
 	public float co2multiplier;
-
 	public GameObject sea;
-
 	public GameObject seashader;
-
 	public Color icecolor; 
-
 	public GameObject ice;
 	public GameObject snow;
 	public GameObject meteors;
 
+	//UI variables
+	public Vector3 animalviewposition;
 	public GameObject firstpersoncam;
 
-	public Vector3 animalviewposition;
+	public GameObject thirdpersonUI;
+
+	public GameObject firstpersonUI;
 
 	// Use this for initialization
 	void Start () {
@@ -165,21 +168,6 @@ public class GameController : MonoBehaviour {
 			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 		}
 
-		//move up animalview with space
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			if(viewup == false)
-			{
-				viewup = true;
-				viewdown = false;
-			}
-			else
-			{
-				viewup = false;
-				viewdown = true;
-			}
-		}
-
 		if(viewup)
 		{
 			if(animalview.transform.position.y < 0)
@@ -195,13 +183,40 @@ public class GameController : MonoBehaviour {
 				animalview.transform.position -= new Vector3(0,10,0);
 			}
 		}
+	}
 
+	void Update()
+	{
+		//move up animalview with space
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			if(viewup == false)
+			{
+				viewup = true;
+				viewdown = false;
+			}
+			else
+			{
+				viewup = false;
+				viewdown = true;
+			}
+		}
+
+		//switch between 1st and 3rd person with F
 		if(Input.GetKeyDown(KeyCode.F))
 		{
 			if(firstpersoncam.activeSelf)
+			{
 				firstpersoncam.SetActive(false);
+				thirdpersonUI.SetActive(true);
+				firstpersonUI.SetActive(false);
+			}
 			else
+			{
 				firstpersoncam.SetActive(true);
+				firstpersonUI.SetActive(true);
+				thirdpersonUI.SetActive(false);
+			}
 		}
 	}
 
@@ -223,8 +238,90 @@ public class GameController : MonoBehaviour {
 
 	public void updateGeologic()
 	{
+		//set period and era
 		//set o2, co2, temp, sea level by finding closest higher and lower values in the tables and linearly calculating the average
 		//also glaciations/extinctions etc
+			
+			//Geologic eras and periods
+			if((int) currenttime < 1600 && (int) currenttime >= 1000)
+			{
+				eratext.text = "Mesoproterozoic";
+			}
+
+			else  if((int) currenttime < 1000 && (int) currenttime >= 541)
+			{
+				eratext.text = "Neoproterozoic";
+				Edescription.text = ""
+				if((int) currenttime < 1000 && (int) currenttime >= 850)
+				{
+					periodtext.text = "Tonian";
+					Pdescription.text = "The mysterious time of the earliest animals";
+				}
+				else if((int) currenttime < 850 && (int) currenttime >= 635)
+				{
+					periodtext.text = "Cryogenian";
+					Pdescription.text = "The time of Earth's largest glaciations";
+				}
+				else if((int) currenttime < 635 && (int) currenttime >= 541)
+				{
+					periodtext.text = "Ediacaran";
+					Pdescription.text = "The first fossil appearance of complex animals";
+				}
+			}
+
+			else if((int) currenttime < 541 && (int) currenttime >= 251)
+			{
+				eratext.text = "Paleozoic";
+				Edescription.text = "Dramatic evolutionary radiation";
+				if((int) currenttime < 541 && (int) currenttime >= 485)
+				{
+					periodtext.text = "Cambrian";
+					Pdescription.text = "The rapid diversification of life as we know it";
+				}
+				else if((int) currenttime < 485 && (int) currenttime >= 443)
+				{
+					periodtext.text = "Ordovician";
+					Pdescription.text = "Continued oceanic diversification, mollusks and arthropods flourish";
+				}
+				else if((int) currenttime < 443 && (int) currenttime >= 419)
+				{
+					periodtext.text = "Silurian";
+					Pdescription.text = "First fish with jaws and bones appear";
+				}
+				else if((int) currenttime < 419 && (int) currenttime >= 358)
+					periodtext.text = "Devonian";
+					Pdescription.text = "For the first time, plants and legged fish reach the land";
+				else if((int) currenttime < 358 && (int) currenttime >= 298)
+					periodtext.text = "Carboniferous";
+				else if((int) currenttime < 298 && (int) currenttime >= 252)
+					periodtext.text = "Permian";
+			}
+
+			else if((int) currenttime < 251 && (int) currenttime >= 66)
+			{
+				eratext.text = "Mesozoic";
+				Edescription.text = "Reptiles evolve and dominate the land";
+				if((int) currenttime < 251 && (int) currenttime >= 201)
+					periodtext.text = "Triassic";
+				else if((int) currenttime < 201 && (int) currenttime >= 145)
+					periodtext.text = "Jurassic";
+				else if((int) currenttime < 145 && (int) currenttime >= 66)
+					periodtext.text = "Cretaceous";
+			}
+
+			else if((int) currenttime < 66)
+			{
+				eratext.text = "Cenozoic";
+				Edescription.text = "Mammals and plants change as the dawn of humans approaches";
+				if((int) currenttime < 66 && (int) currenttime >= 23)
+					periodtext.text = "Paleogene";
+				else if((int) currenttime < 23 && (int) currenttime >= 3)
+					periodtext.text = "Neogene";
+				else if((int) currenttime < 3)
+					periodtext.text = "Quaternary";
+			}
+
+			
 
 			//Marinoan snowball earth
 			if((int) currenttime <= 650 && (int) currenttime >= 635 && !boost)
