@@ -21,18 +21,20 @@ public GameObject fenceright;
 public int starttime;
 
 public GameObject crowngroupisland;
-public int[] crowngrouptime;
+public int[] crowngrouptimes;
 public GameObject geologicislandprefab;
 public int[] geologicislandtimes;
 public GameObject lifeislandprefab;
 public int[] lifeislandtimes;
-
-
+public bool alreadygenerated;
 
 //0, 100, 10 10
 	// Use this for initialization
 	void Start () {
-		generate();
+		if(!alreadygenerated)
+			generate();
+		else
+			addRoadIslands();
 	}
 	
 	public void generate()
@@ -96,14 +98,19 @@ public int[] lifeislandtimes;
 			newfencepost2.transform.parent = transform;
 			newfencepost.transform.localPosition -= new Vector3(-.85f,1.7f);
 			newfencepost2.transform.localPosition -= new Vector3(.85f,1.7f);
-			i+=2;
+			i+=8;
 		}
 
-		//add islands
-		for(int k = 0; k < geologicislandtimes.Length; k++)
+		alreadygenerated = true;
+	}
+
+	public void addRoadIslands()
+	{
+		//add crown group islands
+		for(int k = 0; k < crowngrouptimes.Length; k++)
 		{
-			int timedifference = starttime - geologicislandtimes[k];
-			GameObject newisland = Instantiate(geologicislandprefab, new Vector3(xstart,0,zstart),Quaternion.identity);
+			int timedifference = starttime - crowngrouptimes[k];
+			GameObject newisland = Instantiate(crowngroupisland, new Vector3(xstart,0,zstart),Quaternion.identity);
 			//rotate towards the end of the road
 			 Vector3 relativePos = new Vector3(xend, 0, zend) - newisland.transform.position;
 			 Quaternion rotation = Quaternion.LookRotation(relativePos);
@@ -117,8 +124,47 @@ public int[] lifeislandtimes;
 			newisland.transform.rotation = this.transform.rotation;
 			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
 		}
-	}
 
+		//add geologic islands
+		for(int k = 0; k < geologicislandtimes.Length; k++)
+		{
+			int timedifference = starttime - geologicislandtimes[k];
+			GameObject newisland = Instantiate(geologicislandprefab, new Vector3(xstart,0,zstart),Quaternion.identity);
+			//rotate towards the end of the road
+			 Vector3 relativePos = new Vector3(xend, 0, zend) - newisland.transform.position;
+			 Quaternion rotation = Quaternion.LookRotation(relativePos);
+			 newisland.transform.rotation = rotation;
+			
+			//new position is the road start moved towards the end i units
+			Vector3 newposition = Vector3.MoveTowards(newisland.transform.position, new Vector3(xend, 0, zend),timedifference);
+			newisland.transform.position = newposition;
+			
+			//set the Road as parent
+			newisland.transform.parent = transform;
+			newisland.transform.rotation = this.transform.rotation;
+			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+		}
+
+		//add life islands
+		for(int k = 0; k < lifeislandtimes.Length; k++)
+		{
+			int timedifference = starttime - lifeislandtimes[k];
+			GameObject newisland = Instantiate(lifeislandprefab, new Vector3(xstart,0,zstart),Quaternion.identity);
+			//rotate towards the end of the road
+			 Vector3 relativePos = new Vector3(xend, 0, zend) - newisland.transform.position;
+			 Quaternion rotation = Quaternion.LookRotation(relativePos);
+			 newisland.transform.rotation = rotation;
+			
+			//new position is the road start moved towards the end i units
+			Vector3 newposition = Vector3.MoveTowards(newisland.transform.position, new Vector3(xend, 0, zend),timedifference);
+			newisland.transform.position = newposition;
+			
+			//set the Road as parent
+			newisland.transform.parent = transform;
+			newisland.transform.rotation = this.transform.rotation;
+			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+		}
+	}
 	// Update is called once per frame
 	/* 
 	void Update () {

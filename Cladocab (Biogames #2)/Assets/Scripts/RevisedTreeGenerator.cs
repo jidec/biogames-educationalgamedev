@@ -129,11 +129,13 @@ private string[] allRoads= {
 			if(timeatend != 0)
 			{
 			GameObject newdivergenceisland = Instantiate(divergenceisland, new Vector3(endx, 0, endz),newroad.transform.rotation);
+			//newdivergenceisland.transform.parent = newroad.transform;
 			}
 
 			else
 			{
 			GameObject newoasis = Instantiate(oasis, new Vector3(endx, 0, endz),newroad.transform.rotation);
+			//newoasis.transform.parent = newroad.transform;
 			}
 			newroad.transform.parent = allroads.transform;
 	}

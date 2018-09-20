@@ -8,5 +8,7 @@ public Shader shader;
 	// Use this for initialization
 	void Start () {
 		Camera.main.RenderWithShader(shader,"curved");
+		//Camera.main.SetReplacementShader(shader);
+		Camera.main.SetReplacementShader(shader, "shader");
 	}
 }

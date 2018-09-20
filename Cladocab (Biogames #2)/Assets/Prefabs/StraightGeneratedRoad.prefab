@@ -549,9 +549,13 @@ MonoBehaviour:
   fenceleft: {fileID: 1290315144870380}
   fenceright: {fileID: 1194876302501958}
   starttime: 0
-  crowngroupisland: {fileID: 0}
-  crowngrouptime: 
-  geologicislandprefab: {fileID: 0}
+  crowngroupisland: {fileID: 1187335472565354, guid: 7881fb8dfba89844fb7a5b520058b7d7,
+    type: 2}
+  crowngrouptimes: 
+  geologicislandprefab: {fileID: 1753351758418046, guid: 88a0ee9e296efb74eb9ca0148b6f5913,
+    type: 2}
   geologicislandtimes: 
-  lifeislandprefab: {fileID: 0}
+  lifeislandprefab: {fileID: 1054044363074586, guid: 691eefabcfd16874cabc955eb07b9a76,
+    type: 2}
   lifeislandtimes: 
+  alreadygenerated: 0
