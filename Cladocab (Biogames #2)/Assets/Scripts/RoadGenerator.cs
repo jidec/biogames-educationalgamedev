@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[ExecuteInEditMode]
 //extends road from xstart,zstart to xend,zend
 //also adds islands along the road at times specified in the inspector table
 public class RoadGenerator : MonoBehaviour {
@@ -28,12 +28,14 @@ public GameObject lifeislandprefab;
 public int[] lifeislandtimes;
 public bool alreadygenerated;
 
+public bool islandsgenerated; 
+
 //0, 100, 10 10
 	// Use this for initialization
 	void Start () {
 		if(!alreadygenerated)
 			generate();
-		else
+		else if(!islandsgenerated)
 			addRoadIslands();
 	}
 	
@@ -123,6 +125,7 @@ public bool alreadygenerated;
 			newisland.transform.parent = transform;
 			newisland.transform.rotation = this.transform.rotation;
 			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+			newisland.transform.SetAsFirstSibling();
 		}
 
 		//add geologic islands
@@ -143,6 +146,7 @@ public bool alreadygenerated;
 			newisland.transform.parent = transform;
 			newisland.transform.rotation = this.transform.rotation;
 			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+			newisland.transform.SetAsFirstSibling();
 		}
 
 		//add life islands
@@ -163,7 +167,9 @@ public bool alreadygenerated;
 			newisland.transform.parent = transform;
 			newisland.transform.rotation = this.transform.rotation;
 			newisland.transform.rotation *= Quaternion.Euler(0,90f,0);
+			newisland.transform.SetAsFirstSibling();
 		}
+		islandsgenerated = true; 
 	}
 	// Update is called once per frame
 	/* 

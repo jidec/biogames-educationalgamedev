@@ -104,8 +104,10 @@ public class GameController : MonoBehaviour {
 			}
 
 			//set hierarchytext and myps text
-			hierarchytext.text = currentroad.GetComponent<Road>().pathname;
-			mypstext.text = "" + (int)(myps * 60) + " my/min";
+			String pathtext = currentroad.GetComponent<Road>().pathname;
+			pathtext = pathtext.Replace(",",",\n");
+			hierarchytext.text = pathtext;
+			mypstext.text = "" + (int)(myps * 60);
 		}
 		
 

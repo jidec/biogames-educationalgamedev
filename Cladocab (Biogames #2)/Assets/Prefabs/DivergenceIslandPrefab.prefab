@@ -446,6 +446,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4115245025012016}
+  - component: {fileID: 114183356300054224}
   m_Layer: 0
   m_Name: DivergenceIslandPrefab
   m_TagString: Untagged
@@ -3002,6 +3003,17 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &114183356300054224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522343841616806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 791f56fa647720d4eb429f7da0a0aec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!210 &210023500643403460
 SortingGroup:
   m_ObjectHideFlags: 1

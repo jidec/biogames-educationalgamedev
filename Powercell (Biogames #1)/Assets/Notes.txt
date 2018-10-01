@@ -44,10 +44,8 @@ List of Scripts
 		saves the scene state before the scene changes, loads the scene state after it changes, and carries production information between scenes
 	ChangeSceneOnClick- put on mitochondria view reactionsets, changes the scene to the inspector assigned name
 		also has function to return to the mitochondria view, used by the exit button in each reaction
-
 	MouseWheelCameraZoom
 	ArrowKeyCameraMove
-
 	Tuple
 
 		
