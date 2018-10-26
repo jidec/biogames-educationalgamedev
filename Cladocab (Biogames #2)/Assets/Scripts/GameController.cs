@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour {
 	public string currentorganism;
 	public GameObject organismview;
 	public Stack<string> animalorder;
+	public List<GameObject> spawnpoints; 
+	public List<string> organisms;
 
 
 	//text that changes based on time
@@ -53,23 +55,44 @@ public class GameController : MonoBehaviour {
 	public GameObject thirdpersonUI;
 	public GameObject firstpersonUI;
 
+	public bool storyenabled; 
 
+	public SpeechSet exitspeechset; 
 
 	void Start () {
 		//testing shader
 		//camera.SetReplacementShader(warpshader, "t");
-		//camera.gameObject.SetActive(true);
-		//testing tint
-		//if (RenderSettings.skybox.HasProperty("_Tint"))
-         // RenderSettings.skybox.SetColor("_Tint", Color.red);
-       //else if (RenderSettings.skybox.HasProperty("_SkyTint"))
-         //RenderSettings.skybox.SetColor("_SkyTint", Color.red);
-		animalorder = new Stack<string>();
+		if(!storyenabled)
+		{
+			spawnCab();
+		}
 		InvokeRepeating("updateMyps",0,1);
-		animalorder.Push("CommonStarfish");
-		animalorder.Push("LionsManeJellyfish");
-		animalorder.Push("GiantBarrelSponge");
 		animalviewposition = animalview.transform.position;
+	}
+
+	void spawnCab()
+	{
+		int size = spawnpoints.Count;
+		GameObject point = spawnpoints[UnityEngine.Random.Range(0,size - 1)];
+		playercab.transform.position = point.transform.position; 
+	}
+
+	public void changeOrganism()
+	{
+		//challenge mode 
+		if(!storyenabled)
+		{
+			int r = UnityEngine.Random.Range(0,organisms.Count - 1); 
+			string neworganism = organisms[r]; 
+			currentorganism = neworganism; 
+			organismview.GetComponentInChildren<AnimalView>().changeOrganism(neworganism);
+			
+		}
+
+		else
+		{
+
+		}
 	}
 	void updateMyps()
 	{
@@ -191,21 +214,5 @@ public class GameController : MonoBehaviour {
 		{
 			playercab.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 		}
-	}
-
-
-	//cause organism to exit: called by triggers
-	public void OrganismExit()
-	{
-		organismview.SetActive(false);
-		currentorganism = "";
-		organismview.GetComponent<AnimalView>().speechbubble.SetActive(true);
-	}
-
-	//set next organism: called by triggers
-	public void nextOrganism(string neworganism)
-	{
-		currentorganism = neworganism;
-		organismview.GetComponentInChildren<AnimalView>().changeOrganism(neworganism);
 	}
 }

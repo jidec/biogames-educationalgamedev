@@ -8,9 +8,10 @@ public class AddDetour : MonoBehaviour {
 	void Start () {
 		GameObject detour;
 		int rand = Random.Range(0,3);
+		rand = 0;
 		if(rand == 0)
 		{
-			detour = Resources.Load("LeftCurveAroundDetour", typeof(GameObject)) as GameObject;
+			detour = Resources.Load("Test", typeof(GameObject)) as GameObject;
 		}
 		else if(rand == 1)
 		{
@@ -28,5 +29,8 @@ public class AddDetour : MonoBehaviour {
 		detour.transform.position = this.transform.position;
 		detour.transform.rotation = this.transform.rotation;
 		detour.transform.parent = this.transform; 
+
+		//also rotate whole island to road, because why not
+		transform.localRotation = new Quaternion(0,0,0,0);
 	}
 }

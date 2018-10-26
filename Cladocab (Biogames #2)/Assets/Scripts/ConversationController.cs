@@ -7,6 +7,11 @@ using UnityEngine.UI;
 public class ConversationController : MonoBehaviour {
 
 	public SpeechSet randomquotes;
+
+	public SpeechSet entrancequotes;
+
+	public SpeechSet exitquotes; 
+	
 	private string currentorganism;
 	public GameObject textbubble;
 	bool currentlyspeaking;

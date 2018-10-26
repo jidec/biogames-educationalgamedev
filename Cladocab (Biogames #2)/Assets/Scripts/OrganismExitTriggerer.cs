@@ -9,6 +9,10 @@ public class OrganismExitTriggerer : MonoBehaviour {
 
 	public GameObject nextorganismpickup;
 
+	public GameObject exitspeechset; 
+
+	public GameObject enterspeechset; 
+
 	// Use this for initialization
 	void Start () {
 		
@@ -24,10 +28,16 @@ public class OrganismExitTriggerer : MonoBehaviour {
 		if(col.gameObject.tag == "Player")
 			if(GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().currentorganism == correctorganism)
 			{
-				GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().OrganismExit();
-				if(nextorganismpickup != null)
-					nextorganismpickup.SetActive(true);
+				exitspeechset.GetComponent<SpeechSet>().speakFromSet(); 
+				StartCoroutine(wait()); 
+				GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().changeOrganism(); 
+				enterspeechset.GetComponent<SpeechSet>().speakFromSet(); 
 			}
 
+	}
+
+	public IEnumerator wait()
+	{
+		yield return new WaitForSeconds(10);
 	}
 }
